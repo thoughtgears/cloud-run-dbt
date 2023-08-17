@@ -1,0 +1,42 @@
+version: 3
+
+dotenv: [ '.env', '{{.ENV}}/.env.', '{{.HOME}}/.env' ]
+
+tasks:
+  default:
+    cmds:
+      - task --list
+
+  seed:
+    desc: Seeds the bigquery dataset `input_data` and the `pokemon_data_raw` table
+    cmds:
+      - pip install -r tools/requirements.txt
+      - python tools/seed_table.py -p {{.PROJECT_ID}}
+
+  # Terraform commands to manage the infrastructure
+  terraform:init:
+    desc: Initializes terraform
+    dir: infrastructure
+    cmds:
+      - terraform init
+
+  terraform:plan:
+    desc: Runs terraform plan
+    dir: infrastructure
+    deps:
+      - terraform:init
+    cmds:
+      - terraform plan -out tf.plan
+
+  terraform:apply:
+    desc: Runs terraform apply
+    dir: infrastructure
+    deps:
+      - terraform:plan
+    cmds:
+      - terraform apply tf.plan
+
+  terraform:output:
+    desc: Creates a `.env` file in the root directory with the output of the terraform apply
+    cmds:
+      - echo "PROJECT_ID=$(terraform -chdir=infrastructure output -json | jq -r '.project.value.storage.project.id')" > .env

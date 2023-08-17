@@ -13,6 +13,16 @@ create a job and run a DBT model on it. The job will be triggered by a Cloud Sch
 - [Docker](https://docs.docker.com/get-docker/)
 - [DBT](https://docs.getdbt.com/dbt-cli/installation)
 - [Python](https://www.python.org/downloads/)
+- [Task](https://taskfile.dev/#/installation)
+- [jq](https://stedolan.github.io/jq/download/)
+
+### Environment
+
+You will need an environment file `.env` in the root of the project with the following variables:
+
+```shell
+PROJECT_ID=<your project id>
+```
 
 ## Getting Started
 

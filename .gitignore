@@ -13,3 +13,4 @@
 
 # Data file, can be created with seed_table.py
 pokemon_data.json
+data*.json
