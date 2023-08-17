@@ -51,7 +51,7 @@ module "bigquery" {
 module "datasets" {
   for_each       = var.datasets
   source         = "./core/gcp-bigquery/dataset"
-  dataset_id     = each.value.dataset_id
+  dataset_id     = each.key
   project_id     = module.project.id
   dataset_access = each.value.dataset_access
 }

@@ -27,7 +27,6 @@ variable "storage_buckets" {
 
 variable "datasets" {
   type = map(object({
-    dataset_id               = string
     display_name             = optional(string)
     location                 = optional(string)
     table_expiration_in_days = optional(number)

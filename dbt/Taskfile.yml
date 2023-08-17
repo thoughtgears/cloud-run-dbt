@@ -3,7 +3,6 @@ version: 3
 vars:
   DOCKER_REPO: '{{.REGION}}-docker.pkg.dev/{{.PROJECT_ID}}/dbt'
   SERVICE_NAME: dbt
-  JOB_NAME: should-be-envar
 
 tasks:
   docker:_prepare:

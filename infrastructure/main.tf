@@ -9,7 +9,6 @@ locals {
       storage_buckets = ["input-data"]
       datasets = {
         "input_data" = {
-          dataset_id = "input_data"
           dataset_access = [
             {
               role       = "roles/bigquery.dataOwner"
@@ -18,9 +17,16 @@ locals {
           ]
         },
         "output_data" = {
-          dataset_id               = "output_data"
           table_expiration_in_days = 30
         }
+      }
+    }
+  }
+  jobs = {
+    "dbt" = {
+      name = "dbt"
+      labels = {
+        "owner" = "my-team"
       }
     }
   }
@@ -38,8 +44,28 @@ module "projects" {
   storage_buckets = each.value.storage_buckets
 }
 
+module "jobs" {
+  source        = "./modules/gcp-dbt-factory"
+  jobs          = local.jobs
+  project_id    = module.projects["storage"].project.id
+  repository_id = "dbt"
+}
+
 output "project" {
   value = module.projects
+}
+
+output "jobs" {
+  value = {
+    for job in local.jobs : job.name => {
+      jobs       = module.jobs.jobs[job.name]
+      repository = module.jobs.repository
+      service_account = {
+        email = module.jobs.service_accounts["cr-${job.name}"].email
+        key   = module.jobs.service_accounts["cr-${job.name}"].id
+      }
+    }
+  }
 }
 
 output "region" {

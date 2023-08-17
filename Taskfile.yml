@@ -57,3 +57,4 @@ tasks:
     cmds:
       - echo "PROJECT_ID=$(terraform -chdir=infrastructure output -json | jq -r '.project.value.storage.project.id')" > .env
       - echo "REGION=$(terraform -chdir=infrastructure output -json | jq -r '.region.value')" >> .env
+      - echo "JOB_NAME=$(terraform -chdir=infrastructure output -json | jq -r '.jobs.value.dbt.jobs.name')" >> .env
