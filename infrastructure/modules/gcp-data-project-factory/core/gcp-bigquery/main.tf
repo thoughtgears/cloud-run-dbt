@@ -7,3 +7,19 @@ terraform {
     }
   }
 }
+
+locals {
+  base_apis = [
+    "bigquery.googleapis.com",
+    "bigquerydatapolicy.googleapis.com",
+    "bigquerystorage.googleapis.com",
+    "bigquerydatatransfer.googleapis.com",
+  ]
+}
+
+resource "google_project_service" "this" {
+  for_each = toset(local.base_apis)
+
+  project = var.project_id
+  service = each.value
+}

@@ -26,8 +26,10 @@ locals {
     "cloudfunctions.googleapis.com"
   ]
 }
-# Create a new project
 
+# Create a new project, this will need to have either organization id or
+# folder name to work properly, one or the other will determine if your
+# project is created at the top level of your org or at a folder level.
 module "project" {
   source             = "./core/gcp-project"
   apis               = local.apis
@@ -39,9 +41,22 @@ module "project" {
   folder_name     = var.folder_name
 }
 
-# Conditional for data storage bucket
+# Will enable the bigquery apis needed for any data project
+module "bigquery" {
+  source     = "./core/gcp-bigquery"
+  project_id = module.project.id
+}
 
-# Create bigquery and a bigquery dataset(s)
+# Create bigquery datasets
+module "datasets" {
+  for_each       = var.datasets
+  source         = "./core/gcp-bigquery/dataset"
+  dataset_id     = each.value.dataset_id
+  project_id     = module.project.id
+  dataset_access = each.value.dataset_access
+}
+
+# Conditional for data storage bucket
 
 # Output dataset(s) and project and bucket(s)
 # The outputs needs to either be a single string or a map of strings based on a key that relates to the input
