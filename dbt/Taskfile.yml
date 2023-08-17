@@ -14,8 +14,10 @@ tasks:
 
   docker:build:
     desc: 'Builds the dbt docker image and tags it based on commit sha'
+    deps:
+      - docker:_prepare
     cmds:
-      - docker build --build-arg -t {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:latest .
+      - docker build -t {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:latest .
       - docker tag {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:latest {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:{{.GIT_COMMIT}}
 
   docker:push:

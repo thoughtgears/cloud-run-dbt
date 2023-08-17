@@ -22,7 +22,10 @@ You will need an environment file `.env` in the root of the project with the fol
 
 ```shell
 PROJECT_ID=<your project id>
+REGION=<region to deploy to>
 ```
+
+You can also run `task terraform:output` after an apply to populate the `.env` file with the output variables.
 
 ## Getting Started
 
