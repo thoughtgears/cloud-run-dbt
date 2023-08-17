@@ -1,0 +1,12 @@
+# Idea files
+.idea
+.vscode
+
+# Sensitive files
+.env
+**/*.tfvars
+
+# Terraform files
+**/.terraform/*
+**/*.plan
+**/*.tfstate*
