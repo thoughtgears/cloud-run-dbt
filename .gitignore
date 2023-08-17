@@ -10,3 +10,6 @@
 **/.terraform/*
 **/*.plan
 **/*.tfstate*
+
+# Data file, can be created with seed_table.py
+pokemon_data.json

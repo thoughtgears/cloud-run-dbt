@@ -5,6 +5,9 @@ create a job and run a DBT model on it. The job will be triggered by a Cloud Sch
 
 ## Prerequisites
 
+- A Google Cloud Platform organisation with billing enabled (else you will have to modify the Terraform to use a project
+  without billing)
+- [A Landing zone](https://cloud.google.com/architecture/landing-zones) (only if this goes passed an experiment)
 - [Google Cloud SDK](https://cloud.google.com/sdk/docs/install)
 - [Terraform](https://www.terraform.io/downloads.html)
 - [Docker](https://docs.docker.com/get-docker/)
@@ -12,3 +15,9 @@ create a job and run a DBT model on it. The job will be triggered by a Cloud Sch
 - [Python](https://www.python.org/downloads/)
 
 ## Getting Started
+
+To get started, clone this repository and change into the directory:
+
+```shell
+git clone https://
+```
