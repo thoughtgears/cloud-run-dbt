@@ -3,17 +3,26 @@ variable "billing_account_id" {
 }
 
 variable "name" {
-  type = string
+  type        = string
+  description = "The name of the project. This will be the base for the creation of the project and resources."
 }
 
 variable "organization_id" {
-  type    = string
-  default = null
+  type        = string
+  default     = null
+  description = "The organization ID to use for the project. Required if folder_name is not present."
 }
 
 variable "folder_name" {
-  type    = string
-  default = null
+  type        = string
+  default     = null
+  description = "The folder name to use for the project. Required if organization_id is not present."
+}
+
+variable "storage_buckets" {
+  type        = list(string)
+  description = "List of storage buckets to create in the project, will append the project_id as a prefix."
+  default     = []
 }
 
 variable "datasets" {

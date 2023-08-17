@@ -58,6 +58,15 @@ module "datasets" {
 
 # Conditional for data storage bucket
 
+module "buckets" {
+  count  = length(var.storage_buckets)
+  source = "./extra/gcp_storage_bucket"
+
+  project_id  = module.project.id
+  bucket_name = var.storage_buckets[count.index]
+}
+
+
 # Output dataset(s) and project and bucket(s)
 # The outputs needs to either be a single string or a map of strings based on a key that relates to the input
 # to be able to be used simply in other modules.

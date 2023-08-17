@@ -5,7 +5,8 @@ terraform {
 locals {
   projects = {
     "storage" = {
-      name = "data-storage"
+      name            = "data-storage"
+      storage_buckets = ["input-data"]
       datasets = {
         "input_data" = {
           dataset_id = "input_data"
@@ -33,7 +34,8 @@ module "projects" {
   billing_account_id = var.billing_account_id
   organization_id    = var.organization_id
 
-  datasets = each.value.datasets
+  datasets        = each.value.datasets
+  storage_buckets = each.value.storage_buckets
 }
 
 output "project" {
