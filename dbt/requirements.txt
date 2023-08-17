@@ -1,0 +1,2 @@
+dbt-bigquery==1.6.1
+sqlfmt==0.0.3

@@ -1,0 +1,32 @@
+version: 3
+
+vars:
+  DOCKER_REPO: '{{.REGION}}-docker.pkg.dev/{{.PROJECT_ID}}/dbt'
+  SERVICE_NAME: dbt
+  JOB_NAME: should-be-envar
+
+tasks:
+  docker:_prepare:
+    cmds:
+      - gcloud auth configure-docker --quiet
+      - j2 profiles/profiles.yml.j2 -o profiles/profiles.yml
+      - j2 models/sources.yml.j2 -o models/sources.yml
+
+  docker:build:
+    desc: 'Builds the dbt docker image and tags it based on commit sha'
+    cmds:
+      - docker build --build-arg -t {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:latest .
+      - docker tag {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:latest {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:{{.GIT_COMMIT}}
+
+  docker:push:
+    desc: 'Pushes the dbt docker image to the google artifact registry'
+    deps:
+      - docker:build
+    cmds:
+      - docker push {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:latest
+      - docker push {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:{{.GIT_COMMIT}}
+
+  jobs:update:
+    desc: 'Updates the dbt cloud run job with the latest image based on commit sha'
+    cmds:
+      - gcloud run jobs update {{.JOB_NAME}} --image={{.DOCKER_REPO}}/{{.SERVICE_NAME}}:{{.GIT_COMMIT}} --region {{.REGION}}--project={{.PROJECT_ID}} --quiet

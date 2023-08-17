@@ -1,0 +1,6 @@
+profiles/profiles.yml
+logs
+target
+dbt_packages
+models/sources.yml
+profiles/.user.yml

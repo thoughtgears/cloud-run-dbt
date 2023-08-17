@@ -42,6 +42,13 @@ output "project" {
   value = module.projects
 }
 
+output "region" {
+  value = var.region
+}
+
 variable "billing_account_id" {}
 variable "organization_id" {}
 variable "domain_name" {}
+variable "region" {
+  default = "europe-west2"
+}

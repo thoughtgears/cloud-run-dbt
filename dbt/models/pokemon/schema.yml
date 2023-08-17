@@ -1,0 +1,47 @@
+#version: 2
+#
+#models:
+#  - name: pokemon
+#    description: A collection of pokemons
+#    config:
+#      contract:
+#        enforced: true
+#      on_schema_change: append_new_columns
+#    columns:
+#      - name: id
+#        description: "The primary key for this table, based on pokemon ID"
+#        data_type: integer
+#        constraints:
+#          - type: not_null
+#        tests:
+#          - not_null
+#          - dbt_expectations.expect_column_values_to_be_of_type:
+#              column_type: integer
+#
+#      - name: name
+#        description: "This is the pokemon name"
+#        data_type: string
+#        tests:
+#          - dbt_expectations.expect_column_values_to_be_of_type:
+#              column_type: string
+#
+#      - name: base_experience
+#        description: "This is some type of experience per pokemon"
+#        data_type: integer
+#        tests:
+#          - dbt_expectations.expect_column_values_to_be_of_type:
+#              column_type: integer
+#
+#      - name: height
+#        description: "How high is the pokemon"
+#        data_type: integer
+#        tests:
+#          - dbt_expectations.expect_column_values_to_be_of_type:
+#              column_type: integer
+#
+#      - name: weight
+#        description: "How heavy is the pokemon"
+#        data_type: integer
+#        tests:
+#          - dbt_expectations.expect_column_values_to_be_of_type:
+#              column_type: integer

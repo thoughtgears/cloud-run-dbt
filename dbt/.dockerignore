@@ -1,0 +1,6 @@
+.gitignore
+Dockerfile
+Taskfile.yml
+profiles/profiles.yml.j2
+models/sources.yml.j2
+profiles/.user.yml

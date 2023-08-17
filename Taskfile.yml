@@ -2,6 +2,22 @@ version: 3
 
 dotenv: [ '.env', '{{.ENV}}/.env.', '{{.HOME}}/.env' ]
 
+# Dynamic variables for the task runners
+vars:
+  GIT_COMMIT:
+    sh: git log -n 1 --format=%h
+  GIT_REPO:
+    sh: git config --get remote.origin.url | sed -e 's#^.*:##' -e 's#.git$##' -e 's#//github.com/*##'
+  GIT_REPO_NAME:
+    sh: echo {{.GIT_REPO}} | sed -e 's#^.*/##'
+  GIT_OWNER:
+    sh: echo {{.GIT_REPO}} | sed -e 's#/.*$##'
+
+includes:
+  dbt:
+    taskfile: ./dbt/Taskfile.yml
+    dir: ./dbt
+
 tasks:
   default:
     cmds:
@@ -40,3 +56,4 @@ tasks:
     desc: Creates a `.env` file in the root directory with the output of the terraform apply
     cmds:
       - echo "PROJECT_ID=$(terraform -chdir=infrastructure output -json | jq -r '.project.value.storage.project.id')" > .env
+      - echo "REGION=$(terraform -chdir=infrastructure output -json | jq -r '.region.value')" >> .env

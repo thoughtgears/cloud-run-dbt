@@ -29,5 +29,37 @@ PROJECT_ID=<your project id>
 To get started, clone this repository and change into the directory:
 
 ```shell
-git clone https://
+git clone git@github.com:thoughtgears/cloud-run-dbt.git
+cd cloud-run-dbt
+task run
+```
+
+This will create the infrastructure and seed the tables, then creating a cloud run job to run the DBT model. It will
+then trigger the job using the API that will mimic a cloud scheduler job.
+
+#### Cloud scheduler job
+
+Project can be the the number or the project id, region is the region where the job is deployed and the job is the
+job name that you have deployed. You will have to set the timezone based on the
+[tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). You will also need to create a service
+account and give it the run.invoker role on the job.
+
+```shell
+gcloud iam service-accounts create cloud-scheduler-dbt --display-name="Service account for cloud scheduler that can trigger dbt jobs"
+
+gcloud run jobs add-iam-policy-binding ${JOB} \
+    --region=${REGION} \
+    --member='serviceAccount:cloud-scheduler-dbt@${PROJECT_ID}.iam.gserviceaccount.com' \
+    --role='roles/run.invoker' \
+    --project ${PROJECT_ID}
+
+gcloud scheduler jobs create http ${JOB} \
+    --schedule "0 1 * * *" \
+    --time-zone "Europe/London" \
+    --uri "https://run.googleapis.com/v2/projects/${PROJECT_ID}}/locations/$REGION}/jobs/${JOB}.:run" \
+    --http-method post \
+    --message-body '{}' \
+    --oauth-service-account-email "cloud-scheduler-dbt@${PROJECT_ID}.iam.gserviceaccount.com" \
+    --oauth-token-scope "https://www.googleapis.com/auth/cloud-platform" \
+    --project ${PROJECT_ID}
 ```
