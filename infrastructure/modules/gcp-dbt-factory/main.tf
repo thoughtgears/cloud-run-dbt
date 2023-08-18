@@ -21,12 +21,21 @@ module "jobs" {
   ]
 }
 
+# Setting as resources on project as member to not have to worry about authoritative state of the permissions
 resource "google_project_iam_member" "bigquery_job_creator" {
   for_each = var.jobs
 
   member  = "serviceAccount:${module.service_accounts[each.key].email}"
   project = var.project_id
   role    = "roles/bigquery.jobUser"
+}
+
+resource "google_project_iam_member" "bigquery_user" {
+  for_each = var.jobs
+
+  member  = "serviceAccount:${module.service_accounts[each.key].email}"
+  project = var.project_id
+  role    = "roles/bigquery.user"
 }
 
 module "service_accounts" {
