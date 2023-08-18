@@ -28,6 +28,13 @@ locals {
       labels = {
         "owner" = "my-team"
       }
+      create_json_key = true
+      env_vars = [
+        {
+          name  = "MODEL",
+          value = "pokemon"
+        }
+      ]
     }
   }
 }

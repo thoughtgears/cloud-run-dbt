@@ -13,3 +13,9 @@ variable "secret_value" {
   description = "(Optional) The secret data. Must be no larger than 64KiB."
   default     = null
 }
+
+variable "service_account_accessors" {
+  type        = list(string)
+  description = "(Optional) Access to the secret."
+  default     = []
+}

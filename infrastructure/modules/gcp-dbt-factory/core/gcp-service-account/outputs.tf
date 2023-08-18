@@ -15,6 +15,6 @@ output "member" {
 }
 
 output "json_key" {
-  value     = var.create_json_key ? google_service_account_key.this.0.private_key : null
+  value     = var.create_json_key ? google_service_account_key.this.0.private_key : ""
   sensitive = true
 }
