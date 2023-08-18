@@ -16,6 +16,11 @@ create a job and run a DBT model on it. The job will be triggered by a Cloud Sch
 - [Task](https://taskfile.dev/#/installation)
 - [jq](https://stedolan.github.io/jq/download/)
 
+If you are on a Apple with a silicon chip you will need to enable buildx in
+Docker: [Build multi architecture images on m1 mac](https://blog.jaimyn.dev/how-to-build-multi-architecture-docker-images-on-an-m1-mac/)
+Running docker on Mac to push to the cloud can be a bit slow and tedious, and if you want this to have a simpler setup
+please use CI/CD to build and push the images and update the jobs.
+
 ### Environment
 
 You will need an environment file `.env` in the root of the project with the following variables:
@@ -29,6 +34,7 @@ You can also run `task terraform:output` after an apply to populate the `.env` f
 
 ## Getting Started
 
+Fist make sure you have the latest version of task installed `brew install go-task`
 To get started, clone this repository and change into the directory:
 
 ```shell

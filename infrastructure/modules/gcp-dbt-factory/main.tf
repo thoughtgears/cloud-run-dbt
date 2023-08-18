@@ -21,6 +21,14 @@ module "jobs" {
   ]
 }
 
+resource "google_project_iam_member" "bigquery_job_creator" {
+  for_each = var.jobs
+
+  member  = "serviceAccount:${module.service_accounts[each.key].email}"
+  project = var.project_id
+  role    = "roles/bigquery.jobUser"
+}
+
 module "service_accounts" {
   for_each = var.jobs
 
@@ -49,26 +57,4 @@ module "secret" {
 
 
   depends_on = [module.service_accounts]
-}
-
-variable "jobs" {
-  type = map(object({
-    name            = string
-    labels          = optional(map(string))
-    create_json_key = optional(bool, false)
-    env_vars = optional(list(object({
-      name  = string
-      value = string
-    })))
-  }))
-}
-
-variable "project_id" {
-  type        = string
-  description = "(Required) The project ID to deploy to"
-}
-
-variable "repository_id" {
-  type        = string
-  description = "(Required) The name of the repository to create for the DBT docker images"
 }

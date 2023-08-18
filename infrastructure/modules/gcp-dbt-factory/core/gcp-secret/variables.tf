@@ -16,6 +16,6 @@ variable "secret_value" {
 
 variable "service_account_accessors" {
   type        = list(string)
-  description = "(Optional) Access to the secret."
+  description = "(Optional) Accounts with access to the secret. needs to contain user:, group: domain: or serviceAccount: and a valid email address or domain name."
   default     = []
 }

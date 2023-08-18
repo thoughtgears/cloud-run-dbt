@@ -29,6 +29,16 @@ tasks:
       - pip install -r tools/requirements.txt
       - python tools/seed_table.py -p {{.PROJECT_ID}}
 
+  run:
+    desc: Runs all the steps needed to create a job in Google Cloud for dbt
+    cmds:
+      - task terraform:apply
+      - task terraform:output
+      - task seed
+      - task dbt:docker:push
+      - task dbt:jobs:update
+      - task dbt:jobs:run
+
   # Terraform commands to manage the infrastructure
   terraform:init:
     desc: Initializes terraform

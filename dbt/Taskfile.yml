@@ -16,18 +16,32 @@ tasks:
     deps:
       - docker:_prepare
     cmds:
-      - docker build -t {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:latest .
-      - docker tag {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:latest {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:{{.GIT_COMMIT}}
+      - |
+        if [[ "$(uname -m)" == "arm64" ]]; then
+          docker buildx build --platform linux/amd64,linux/arm64 --push -t {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:latest .
+          docker buildx build --platform linux/amd64,linux/arm64 --push -t {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:{{.GIT_COMMIT}} .
+        else
+          docker build -t {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:latest .
+          docker tag {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:latest {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:{{.GIT_COMMIT}}
+        fi
 
   docker:push:
     desc: 'Pushes the dbt docker image to the google artifact registry'
     deps:
       - docker:build
     cmds:
-      - docker push {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:latest
-      - docker push {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:{{.GIT_COMMIT}}
+      - |
+        if [[ "$(uname -m)" != "arm64" ]]; then
+          docker build -t {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:latest .
+          docker tag {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:latest {{.DOCKER_REPO}}/{{.SERVICE_NAME}}:{{.GIT_COMMIT}}
+        fi
 
   jobs:update:
     desc: 'Updates the dbt cloud run job with the latest image based on commit sha'
     cmds:
-      - gcloud run jobs update {{.JOB_NAME}} --image={{.DOCKER_REPO}}/{{.SERVICE_NAME}}:{{.GIT_COMMIT}} --region {{.REGION}}--project={{.PROJECT_ID}} --quiet
+      - gcloud run jobs update {{.JOB_NAME}} --image={{.DOCKER_REPO}}/{{.SERVICE_NAME}}:{{.GIT_COMMIT}} --region {{.REGION}} --project={{.PROJECT_ID}} --quiet
+
+  jobs:run:
+    desc: 'Runs the dbt cloud run job'
+    cmds:
+      - gcloud run jobs execute {{.JOB_NAME}} --region {{.REGION}} --project={{.PROJECT_ID}} --quiet
