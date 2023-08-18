@@ -33,3 +33,8 @@ variable "repository_id" {
   type        = string
   description = "(Required) The name of the repository to create for the DBT docker images"
 }
+
+variable "datasets" {
+  type        = any
+  description = "(Required) A set of datasets for the job to have access to"
+}

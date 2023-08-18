@@ -13,7 +13,7 @@ locals {
             {
               role       = "roles/bigquery.dataOwner"
               principals = ["group:gcp-devops@${var.domain_name}"]
-            }
+            },
           ]
         },
         "output_data" = {
@@ -56,6 +56,7 @@ module "jobs" {
   jobs          = local.jobs
   project_id    = module.projects["storage"].project.id
   repository_id = "dbt"
+  datasets      = module.projects["storage"].datasets
 }
 
 output "project" {

@@ -38,6 +38,15 @@ resource "google_project_iam_member" "bigquery_user" {
   role    = "roles/bigquery.user"
 }
 
+resource "google_bigquery_dataset_iam_binding" "this" {
+  for_each = var.datasets
+
+  project    = var.project_id
+  dataset_id = each.value.dataset_id
+  members    = local.service_account_emails
+  role       = "roles/bigquery.admin"
+}
+
 module "service_accounts" {
   for_each = var.jobs
 
